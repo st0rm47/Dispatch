@@ -1,0 +1,26 @@
+{
+  "name": "dispatch-backend",
+  "version": "1.0.0",
+  "description": "API for drafting and sending personalized job application emails via Gmail, with a choice of LLM providers.",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "auth": "node src/services/getRefreshToken.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0",
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "googleapis": "^144.0.0",
+    "mailcomposer": "^4.0.2",
+    "multer": "^1.4.5-lts.1",
+    "open": "^8.4.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
