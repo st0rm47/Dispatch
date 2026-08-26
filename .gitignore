@@ -1,0 +1,27 @@
+# Local profile database (name, signature, resume — personal data)
+backend/data/*.db
+backend/data/*.db-journal
+
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Build artifacts
+dist/
+build/
