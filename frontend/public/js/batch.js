@@ -1,5 +1,4 @@
-// ---------- Mode toggle ----------
-
+// Mode toggle
 const tabSingle = document.getElementById("tabSingle");
 const tabBatch = document.getElementById("tabBatch");
 const singleApp = document.getElementById("singleApp");
@@ -278,6 +277,25 @@ async function redraftRow(index) {
   await processRow(row);
 }
 
+async function autoSaveBatchProfile() {
+  const formData = new FormData();
+  formData.append("senderName", document.getElementById("bSenderName").value.trim());
+  formData.append("fromEmail", document.getElementById("bFrom").value.trim());
+  formData.append("senderSignature", document.getElementById("bSenderSignature").value.trim());
+  formData.append("keyPoints", document.getElementById("bKeyPoints").value.trim());
+  if (bCvFile) formData.append("resume", bCvFile);
+  try {
+    const res = await fetch(`${API}/profile`, { method: "POST", body: formData });
+    const data = await res.json();
+    if (res.ok) {
+      bHasSavedResume = data.hasResume;
+      bSavedResumeFilename = data.resumeFilename;
+    }
+  } catch {
+    // Non-critical — the batch run itself still proceeds either way.
+  }
+}
+
 document.getElementById("findDraftBtn").addEventListener("click", async () => {
   const btn = document.getElementById("findDraftBtn");
   const errorEl = document.getElementById("batchError");
@@ -296,6 +314,10 @@ document.getElementById("findDraftBtn").addEventListener("click", async () => {
     errorEl.classList.remove("hidden");
     return;
   }
+
+  // Fire-and-forget: shared fields (name, signature, key points, CV) are all
+  // filled in by this point, so save them for next time without blocking the run.
+  autoSaveBatchProfile();
 
   batchRows = companies.map((c) => ({
     ...c,

@@ -5,7 +5,7 @@ const STEP_NAMES = ["Your info", "Target", "Content", "Review & send"];
 let currentStep = 0;
 let cvFile = null;
 
-// Step navigation
+//  Step navigation 
 
 function goToStep(index) {
   currentStep = Math.max(0, Math.min(TOTAL_STEPS - 1, index));
@@ -106,12 +106,15 @@ async function loadProfile() {
   }
 }
 
-document.getElementById("saveProfileBtn").addEventListener("click", async () => {
+async function persistProfile({ showFeedback = true } = {}) {
   const btn = document.getElementById("saveProfileBtn");
   const statusEl = document.getElementById("profileStatus");
-  btn.disabled = true;
-  statusEl.textContent = "Saving…";
-  statusEl.className = "status";
+
+  if (showFeedback) {
+    btn.disabled = true;
+    statusEl.textContent = "Saving…";
+    statusEl.className = "status";
+  }
 
   const formData = new FormData();
   formData.append("senderName", document.getElementById("senderName").value.trim());
@@ -126,20 +129,28 @@ document.getElementById("saveProfileBtn").addEventListener("click", async () => 
     if (!res.ok) throw new Error(data.error || "Failed to save.");
     hasSavedResume = data.hasResume;
     savedResumeFilename = data.resumeFilename;
-    statusEl.textContent = "✓ Saved";
-    statusEl.className = "status ok";
     const note = document.getElementById("savedResumeNote");
     if (hasSavedResume) {
       note.textContent = `Using saved resume: ${savedResumeFilename} — choose a new file above to replace it.`;
       note.classList.remove("hidden");
     }
+    if (showFeedback) {
+      statusEl.textContent = "✓ Saved";
+      statusEl.className = "status ok";
+    }
+    return true;
   } catch (err) {
-    statusEl.textContent = err.message;
-    statusEl.className = "status err";
+    if (showFeedback) {
+      statusEl.textContent = err.message;
+      statusEl.className = "status err";
+    }
+    return false;
   } finally {
-    btn.disabled = false;
+    if (showFeedback) btn.disabled = false;
   }
-});
+}
+
+document.getElementById("saveProfileBtn").addEventListener("click", () => persistProfile({ showFeedback: true }));
 
 document.getElementById("clearProfileBtn").addEventListener("click", async () => {
   const statusEl = document.getElementById("profileStatus");
@@ -269,6 +280,7 @@ document.getElementById("draftBtn").addEventListener("click", async () => {
     if (!draft) return; // validation message already shown
     document.getElementById("reviewSubject").value = draft.subject;
     document.getElementById("reviewBody").value = draft.body;
+    persistProfile({ showFeedback: false }); // fire-and-forget: keyPoints/CV are now guaranteed filled
     goToStep(3);
   } catch (err) {
     errorEl.textContent = err.message;
