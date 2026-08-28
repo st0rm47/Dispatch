@@ -12,6 +12,7 @@
   --border: #dfe7f1;
   --ok: #2f9463;
   --err: #d0453b;
+  --tabs-h: 64px;
 }
 
 * { box-sizing: border-box; }
@@ -42,8 +43,9 @@ body {
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: var(--tabs-h);
+  height: calc(100vh - var(--tabs-h));
+  z-index: 20;
 }
 
 .brand {
@@ -442,8 +444,12 @@ input:focus, textarea:focus, select:focus {
   display: flex;
   gap: 4px;
   justify-content: center;
-  padding: 18px 0 0;
+  padding: 14px 0;
   background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid var(--border);
 }
 
 .mode-tab {
@@ -605,7 +611,7 @@ input:focus, textarea:focus, select:focus {
 
   .stepper {
     position: sticky;
-    top: 0;
+    top: var(--tabs-h);
     z-index: 30;
     height: auto;
     flex-direction: row;
@@ -644,7 +650,7 @@ input:focus, textarea:focus, select:focus {
   .panel { padding: 32px 24px 56px; max-width: 100%; }
   .batch-shell { padding: 24px 18px 56px; }
 
-  .mode-tabs { padding: 14px 14px 0; }
+  .mode-tabs { padding: 14px 14px; }
   .mode-tab { flex: 1; text-align: center; }
 }
 
