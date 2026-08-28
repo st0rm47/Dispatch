@@ -12,7 +12,8 @@ const STATIC_TEMPLATES = {
 
 My name is {{senderName}}, and I'm reaching out to express interest in potential opportunities at {{companyName}}, particularly around {{role}}.
 
-A bit about my background:
+A brief overview of my background:
+
 {{keyPoints}}
 
 {{extraContext}}I've attached my resume for your review, and would welcome the chance to discuss how I could contribute to your team — now or as future openings come up.
@@ -43,7 +44,8 @@ Best regards,
 
 My name is {{senderName}}. I'm writing to ask whether {{companyName}} currently has, or expects to have, any openings related to {{role}}.
 
-A bit about my background:
+A brief overview of my background:
+
 {{keyPoints}}
 
 {{extraContext}}I've attached my resume for reference. If there's a better contact or process for this, I'd appreciate being pointed in the right direction.
@@ -59,6 +61,8 @@ Best regards,
     body: `Dear Hiring Manager,
 
 I am writing to formally apply for the {{role}} position at {{companyName}}.
+
+A brief summary of relevant experience:
 
 {{keyPoints}}
 
@@ -78,15 +82,27 @@ function fillTemplate(str, vars) {
   });
 }
 
-function renderStaticTemplate({
-  mailType,
-  senderName,
-  senderSignature,
-  companyName,
-  role,
-  keyPoints,
-  extraContext,
-}) {
+// Recruiters see plenty of pasted, inconsistently-formatted notes — raw
+// "- like this" lines with mixed casing and no punctuation read as an
+// unfinished draft rather than a deliberate list. This normalizes whatever
+// the person typed (dashes, asterisks, bullets, or none at all) into a
+// clean, consistently punctuated bullet list.
+function formatKeyPoints(text) {
+  if (!text) return "";
+
+  return text
+    .split("\n")
+    .map((line) => line.replace(/^[\s]*[-*•]\s*/, "").trim())
+    .filter(Boolean)
+    .map((line) => {
+      const capitalized = line.charAt(0).toUpperCase() + line.slice(1);
+      return /[.!?]$/.test(capitalized) ? capitalized : `${capitalized}.`;
+    })
+    .map((line) => `  •  ${line}`)
+    .join("\n");
+}
+
+function renderStaticTemplate({ mailType, senderName, senderSignature, companyName, role, keyPoints, extraContext }) {
   const tpl = STATIC_TEMPLATES[mailType];
   if (!tpl) {
     throw new Error(`No static template exists for mail type "${mailType}".`);
@@ -96,7 +112,7 @@ function renderStaticTemplate({
     senderName: senderName || "",
     companyName: companyName || "your company",
     role: role || "roles matching my background",
-    keyPoints: keyPoints || "",
+    keyPoints: formatKeyPoints(keyPoints),
     extraContext: extraContext ? `${extraContext}\n\n` : "",
     signature: senderSignature || senderName || "",
   };
