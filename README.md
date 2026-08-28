@@ -18,8 +18,8 @@ You fill in a short four-step form → the model drafts a subject + body → you
 ## Quick start
 
 ```bash
-git clone <this-repo>
-cd job-mail-automation
+git clone https://github.com/st0rm47/Dispatch.git
+cd Dispatch
 cd backend && cp .env.example .env   # fill in your keys, see docs/SETUP.md
 cd ..
 docker compose up --build
@@ -32,7 +32,7 @@ Full walkthrough (Google Cloud OAuth setup, getting a refresh token, running wit
 ## Project structure
 
 ```
-job-mail-automation/
+Dispatch/
 ├── backend/                   # Express API
 │   ├── src/
 │   │   ├── server.js
