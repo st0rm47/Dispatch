@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dispatch — Job Mail Automation</title>
+    <title>Dispatch - Job Mail Automation</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -46,48 +46,31 @@
           <div id="stepperProgress" class="stepper-progress"></div>
         </div>
 
-        <p class="stepper-hint">
-          Click a step to jump straight to it — nothing you've typed gets lost.
-        </p>
         <p id="mobileStepLabel" class="mobile-step-label"></p>
       </aside>
 
       <main class="panel">
         <section class="step-panel active" data-panel="0">
-          <h1>Your info</h1>
-          <p class="sub">This closes every email you send.</p>
+          <h1>Information</h1>
+          <p class="sub">Tell us about yourself</p>
 
           <label
             >Your name
-            <input type="text" id="senderName" placeholder="Aayush Sharma" />
+            <input type="text" id="senderName" placeholder="" />
           </label>
           <label
-            >Send from <span class="hint">(your Gmail address)</span>
+            >Send from <span class="hint">  </span>
             <input type="email" id="from" placeholder="you@gmail.com" />
           </label>
           <label
             >Signature block
-            <span class="hint">(phone, LinkedIn, portfolio)</span>
+            <span class="hint">(Phone, LinkedIn, Github, Portfolio)</span>
             <textarea
               id="senderSignature"
               rows="4"
-              placeholder="Aayush Sharma&#10;+977-98XXXXXXXX&#10;linkedin.com/in/aayushsharma"
+              placeholder="Name&#10;+977-98XXXXXXXX&#10;github.com/xxxxxxx&#10;linkedin.com/in/xxxxxxx"
             ></textarea>
           </label>
-
-          <div class="save-row">
-            <button type="button" id="saveProfileBtn" class="btn tiny">
-              💾 Save these details for next time
-            </button>
-            <button
-              type="button"
-              id="clearProfileBtn"
-              class="btn tiny ghost-tiny"
-            >
-              Clear saved details
-            </button>
-            <span id="profileStatus" class="status"></span>
-          </div>
 
           <div class="nav-row">
             <span></span>
@@ -99,23 +82,16 @@
 
         <section class="step-panel" data-panel="1">
           <h1>Target</h1>
-          <p class="sub">Who's this going to, and how should it read?</p>
+          <p class="sub">Who is this email going to? </p>
 
-          <label
-            >Company name
-            <input type="text" id="companyName" placeholder="Acme Robotics" />
+          <label> Company Name
+            <input type="text" id="companyName"/>
           </label>
-          <label
-            >Recruiter / HR email
-            <input type="email" id="to" placeholder="careers@acme.com" />
+          <label> Recruiter / HR email
+            <input type="email" id="to" />
           </label>
-          <label
-            >Role you're targeting <span class="hint">(optional)</span>
-            <input
-              type="text"
-              id="role"
-              placeholder="Software Engineering Intern"
-            />
+          <label>Targeted Role<span class="hint">(optional)</span>
+            <input type="text" id="role" placeholder="Software Engineering Intern"/>
           </label>
 
           <div class="row">
@@ -126,8 +102,8 @@
             <label
               >Content
               <select id="contentMode">
-                <option value="ai">✨ AI-generated</option>
-                <option value="template">📄 Predefined template</option>
+                <option value="ai">AI-generated</option>
+                <option value="template">Predefined template</option>
               </select>
             </label>
           </div>
@@ -149,23 +125,21 @@
 
         <section class="step-panel" data-panel="2">
           <h1>Content</h1>
-          <p class="sub">What should the model actually say?</p>
+          <p class="sub"> What should the model actually say?</p>
 
           <label
-            >Key points / achievements
-            <span class="hint"
-              >(bullets — the model won't invent facts beyond these)</span
-            >
+            >Key points / Achievements
+          
             <textarea
               id="keyPoints"
               rows="5"
-              placeholder="- 3rd year CS student, built X using Y&#10;- Interned at Z, shipped feature that did W&#10;- Winner, university hackathon 2025"
+              placeholder="- 4th year CS student, built X using Y&#10;- Interned at Z, shipped feature that did W&#10;- Winner, university hackathon 2025"
             ></textarea>
           </label>
           <label
             >Extra context
             <span class="hint"
-              >(optional — posting link, referral name, why this company)</span
+              >(optional - Posting link, Referral name, why this company)</span
             >
             <textarea
               id="extraContext"
@@ -174,13 +148,27 @@
             ></textarea>
           </label>
           <label
-            >Attach CV / Resume
+            >Attach Resume
             <div class="file-drop" id="fileDrop">
               <input type="file" id="cv" accept=".pdf,.doc,.docx" />
               <span id="fileLabel">Choose a file or drag it here</span>
             </div>
             <span id="savedResumeNote" class="hint hidden"></span>
           </label>
+
+          <div class="save-row">
+            <button type="button" id="saveProfileBtn" class="btn tiny">
+              💾 Save these details for next time
+            </button>
+            <button
+              type="button"
+              id="clearProfileBtn"
+              class="btn tiny ghost-tiny"
+            >
+              Clear saved details
+            </button>
+            <span id="profileStatus" class="status"></span>
+          </div>
 
           <div class="nav-row">
             <button type="button" class="btn ghost" data-prev="1">
@@ -194,7 +182,7 @@
         </section>
 
         <section class="step-panel" data-panel="3">
-          <h1>Review &amp; send</h1>
+          <h1>Review &amp; Send</h1>
           <p class="sub">
             Edit anything directly, just like a real Gmail draft.
           </p>
@@ -211,11 +199,11 @@
 
             <div class="gmail-field">
               <span class="gmail-field-label">From</span>
-              <span id="reviewFrom" class="gmail-field-value">—</span>
+              <span id="reviewFrom" class="gmail-field-value">:</span>
             </div>
             <div class="gmail-field">
               <span class="gmail-field-label">To</span>
-              <span id="reviewTo" class="gmail-field-value">—</span>
+              <span id="reviewTo" class="gmail-field-value">:</span>
             </div>
             <div class="gmail-field">
               <span class="gmail-field-label">Subject</span>
@@ -249,27 +237,27 @@
     <div class="batch-app hidden" id="batchApp">
       <div class="batch-shell">
         <section class="block">
-          <h1>Batch campaign</h1>
+          <h1>Batch Campaign</h1>
           <p class="sub">
-            Paste company names — Claude researches each one's careers page, a
+            Paste company names - Claude researches each one's careers page, a
             published contact email, and any open roles before drafting.
           </p>
           <p id="lookupWarning" class="warning hidden"></p>
 
           <label
             >Your name
-            <input type="text" id="bSenderName" placeholder="Aayush Sharma" />
+            <input type="text" id="bSenderName"  />
           </label>
           <label
-            >Send from <span class="hint">(your Gmail address)</span>
+            >Send from <span class="hint"></span>
             <input type="email" id="bFrom" placeholder="you@gmail.com" />
           </label>
           <label
             >Signature block
             <textarea
-              id="bSenderSignature"
-              rows="3"
-              placeholder="Aayush Sharma&#10;+977-98XXXXXXXX&#10;linkedin.com/in/aayushsharma"
+              id="senderSignature"
+              rows="4"
+              placeholder="Name&#10;+977-98XXXXXXXX&#10;github.com/xxxxxxx&#10;linkedin.com/in/xxxxxxx"
             ></textarea>
           </label>
 
@@ -277,8 +265,8 @@
             <label
               >Content
               <select id="bContentMode">
-                <option value="ai">✨ AI-generated</option>
-                <option value="template">📄 Predefined template</option>
+                <option value="ai">AI-generated</option>
+                <option value="template">Predefined template</option>
               </select>
             </label>
             <label id="bProviderField"
@@ -292,13 +280,13 @@
             <input
               type="text"
               id="bRoleInterest"
-              placeholder="Software engineering internship"
+              placeholder="Software Engineering Internship"
             />
           </label>
 
           <label
-            >Key points / achievements
-            <span class="hint">(shared across the whole batch)</span>
+            >Key points / Achievements
+            <span class="hint">(Shared across the whole batch)</span>
             <textarea
               id="bKeyPoints"
               rows="4"
@@ -310,8 +298,8 @@
             <textarea id="bExtraContext" rows="2"></textarea>
           </label>
           <label
-            >Attach CV / Resume
-            <span class="hint">(same file goes to everyone in this batch)</span>
+            >Attach Resume
+            <span class="hint"></span>
             <div class="file-drop" id="bFileDrop">
               <input type="file" id="bCv" accept=".pdf,.doc,.docx" />
               <span id="bFileLabel">Choose a file or drag it here</span>
@@ -322,13 +310,12 @@
           <label
             >Companies
             <span class="hint"
-              >(one per line — "Company Name" or "Company Name |
-              https://website.com")</span
+              ></span
             >
             <textarea
               id="bCompanyList"
               rows="6"
-              placeholder="Acme Robotics&#10;Northwind Systems | https://northwind.example&#10;Globex Corp"
+              placeholder="Acme Robotics&#10;Northwind Systems | https://northwind.example&#10"
             ></textarea>
           </label>
 
