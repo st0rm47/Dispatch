@@ -1,19 +1,19 @@
-# Dispatch — Job Mail Automation
+# Dispatch - Job Mail Automation
 
-Draft and send personalized job-application emails — cold outreach, follow-up, vacancy inquiry, formal application — through your own Gmail account, with your choice of LLM writing the copy and your CV attached automatically.
+Draft and send personalized job-application emails - cold outreach, follow-up, vacancy inquiry, formal application through your own Gmail account, with your choice of LLM writing the copy and your CV attached automatically.
 
 You fill in a short four-step form → the model drafts a subject + body → you review and edit it in a Gmail-style card, exactly like a real draft → "Send" fires it through your Gmail account with the CV attached. Nothing sends without you seeing it first.
 
 ## Features
 
-- **Choice of LLM** — Claude, OpenAI, Gemini, or a local Ollama model. The "Write with" dropdown only shows providers you've actually configured.
-- **Four mail types out of the box** — cold outreach, follow-up, vacancy inquiry, formal application — each with its own drafting strategy, easy to extend.
-- **Real Gmail-style review** — From/To/Subject/Body laid out like an actual compose window, editable inline before sending.
-- **Non-destructive step navigation** — jump back to any earlier step to tweak something; nothing you've typed is lost, and you don't need to redraft to see the change reflected.
-- **Batch campaign mode** — paste a list of company names and Claude's web search finds each one's careers page and a _published_ contact email before drafting (never guesses or constructs an email). Skim the whole batch in one table, fix anything, then send all.
-- **Remembers your details** — name, signature, key points, and resume are saved locally (SQLite) after the first time, so you don't re-enter or re-upload them every session. Nothing leaves your machine.
-- **Predefined template option** — skip AI drafting entirely and use a fixed email pattern with placeholders (company name, role, etc. filled in automatically) — instant, free, no provider required.
-- **CV attached automatically** via the Gmail API (OAuth2, `gmail.send` scope only — this app can never read your inbox).
+- **Choice of LLM** - Claude, OpenAI, Gemini, or a local Ollama model. The "Write with" dropdown only shows providers you've actually configured.
+- **Four mail types out of the box** - cold outreach, follow-up, vacancy inquiry, formal application each with its own drafting strategy, easy to extend.
+- **Real Gmail-style review** - From/To/Subject/Body laid out like an actual compose window, editable inline before sending.
+- **Non-destructive step navigation** - Jump back to any earlier step to tweak something; nothing you've typed is lost, and you don't need to redraft to see the change reflected.
+- **Batch campaign mode** - Paste a list of company names and Claude's web search finds each one's careers page and a _published_ contact email before drafting (never guesses or constructs an email). Skim the whole batch in one table, fix anything, then send all.
+- **Remembers your details** - Name, signature, key points, and resume are saved locally (SQLite) after the first time, so you don't re-enter or re-upload them every session. Nothing leaves your machine.
+- **Predefined template option** - Skip AI drafting entirely and use a fixed email pattern with placeholders (company name, role, etc. filled in automatically) - instant, free, no provider required.
+- **CV attached automatically** via the Gmail API (OAuth2, `gmail.send` scope only - this app can never read your inbox).
 
 ## Quick start
 
