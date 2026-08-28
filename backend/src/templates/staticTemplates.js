@@ -1,22 +1,26 @@
-// Predefined mail patterns as an alternative to LLM drafting: no API call,
-// no provider needed, instant, and fully predictable. Only the bracketed
-// placeholders change per company; everything else is fixed wording.
+// Predefined email templates as an alternative to LLM drafting.
+// No API call, no provider required, instant, deterministic output.
 //
-// Placeholders: {{senderName}} {{companyName}} {{role}} {{keyPoints}}
-// {{extraContext}} {{signature}}
+// Placeholders:
+// {{senderName}}    - Applicant's name
+// {{companyName}}   - Company name
+// {{role}}          - Target position
+// {{keyPoints}}     - Applicant's relevant skills/experience
+// {{extraContext}}  - Optional company/job-specific context
+// {{signature}}     - Applicant's signature/contact details
 
 const STATIC_TEMPLATES = {
   cold_outreach: {
-    subject: "Exploring opportunities at {{companyName}}",
+    subject: "{{role}} opportunities at {{companyName}}",
     body: `Dear Hiring Team,
 
-My name is {{senderName}}, and I'm reaching out to express interest in potential opportunities at {{companyName}}, particularly around {{role}}.
+My name is {{senderName}}, and I'm reaching out to explore opportunities for a {{role}} role at {{companyName}}. I'm particularly interested in contributing to a team where I can apply my technical skills while continuing to grow professionally.
 
-A brief overview of my background:
+Here are a few highlights of my background:
 
 {{keyPoints}}
 
-{{extraContext}}I've attached my resume for your review, and would welcome the chance to discuss how I could contribute to your team — now or as future openings come up.
+{{extraContext}}I have attached my resume for your consideration. If there is a suitable current or upcoming opportunity, I would be glad to discuss how my skills could contribute to your team.
 
 Thank you for your time and consideration.
 
@@ -25,30 +29,32 @@ Best regards,
   },
 
   followup: {
-    subject: "Following up — {{role}} at {{companyName}}",
+    subject: "Following up on {{role}} — {{companyName}}",
     body: `Dear Hiring Team,
 
-I wanted to briefly follow up on my earlier note regarding {{role}} at {{companyName}}. I remain very interested in the opportunity and wanted to check if there's any update on my application.
+I hope you're doing well. I wanted to follow up regarding my application for the {{role}} position at {{companyName}}.
 
-{{extraContext}}Happy to provide any additional information that would help.
+I remain very interested in the opportunity and would appreciate any update you may be able to share regarding the status of my application.
 
-Thank you again for your time.
+{{extraContext}}Please let me know if you need any additional information or documents from my side.
+
+Thank you again for your time and consideration. I look forward to hearing from you.
 
 Best regards,
 {{signature}}`,
   },
 
   vacancy_inquiry: {
-    subject: "Inquiring about openings at {{companyName}}",
+    subject: "Inquiry about {{role}} opportunities at {{companyName}}",
     body: `Dear Hiring Team,
 
-My name is {{senderName}}. I'm writing to ask whether {{companyName}} currently has, or expects to have, any openings related to {{role}}.
+My name is {{senderName}}, and I'm writing to inquire whether {{companyName}} currently has, or may soon have, opportunities for a {{role}}.
 
-A brief overview of my background:
+My relevant background includes:
 
 {{keyPoints}}
 
-{{extraContext}}I've attached my resume for reference. If there's a better contact or process for this, I'd appreciate being pointed in the right direction.
+{{extraContext}}I've attached my resume for reference. If there is a suitable opening, I would appreciate the opportunity to discuss it further. If another person or team handles recruitment for this area, I would also be grateful if you could point me in the right direction.
 
 Thank you for your time.
 
@@ -57,18 +63,18 @@ Best regards,
   },
 
   formal_application: {
-    subject: "Application for {{role}} at {{companyName}}",
+    subject: "Application for {{role}} — {{companyName}}",
     body: `Dear Hiring Manager,
 
-I am writing to formally apply for the {{role}} position at {{companyName}}.
+I am writing to apply for the {{role}} position at {{companyName}}. I am interested in the opportunity to contribute my technical skills and gain further practical experience in a professional environment.
 
-A brief summary of relevant experience:
+My relevant skills and experience include:
 
 {{keyPoints}}
 
-{{extraContext}}My resume is attached for your review. I would welcome the opportunity to discuss my qualifications further and am available at your convenience for an interview.
+{{extraContext}}My resume is attached for your review. I would welcome the opportunity to discuss my background and how I could contribute to your team.
 
-Thank you for your time and consideration.
+Thank you for considering my application. I look forward to hearing from you.
 
 Sincerely,
 {{signature}}`,
@@ -78,32 +84,63 @@ Sincerely,
 function fillTemplate(str, vars) {
   return str.replace(/{{\s*(\w+)\s*}}/g, (_, key) => {
     const value = vars[key];
-    return value != null && value !== "" ? value : "";
+    return value != null && String(value).trim() !== ""
+      ? String(value).trim()
+      : "";
   });
 }
 
-// Recruiters see plenty of pasted, inconsistently-formatted notes — raw
-// "- like this" lines with mixed casing and no punctuation read as an
-// unfinished draft rather than a deliberate list. This normalizes whatever
-// the person typed (dashes, asterisks, bullets, or none at all) into a
-// clean, consistently punctuated bullet list.
+/**
+ * Formats user-provided skills/experience into a clean bullet list.
+ *
+ * Supports:
+ * - Plain lines
+ * - "- item"
+ * - "* item"
+ * - "• item"
+ * - Numbered lines such as "1. item"
+ */
 function formatKeyPoints(text) {
-  if (!text) return "";
+  if (!text || !String(text).trim()) {
+    return "";
+  }
 
-  return text
-    .split("\n")
-    .map((line) => line.replace(/^[\s]*[-*•]\s*/, "").trim())
+  return String(text)
+    .split(/\r?\n/)
+    .map((line) => line.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim())
     .filter(Boolean)
     .map((line) => {
-      const capitalized = line.charAt(0).toUpperCase() + line.slice(1);
-      return /[.!?]$/.test(capitalized) ? capitalized : `${capitalized}.`;
+      const normalized = line.charAt(0).toUpperCase() + line.slice(1);
+
+      return /[.!?]$/.test(normalized) ? normalized : `${normalized}.`;
     })
-    .map((line) => `  •  ${line}`)
+    .map((line) => `• ${line}`)
     .join("\n");
 }
 
-function renderStaticTemplate({ mailType, senderName, senderSignature, companyName, role, keyPoints, extraContext }) {
+/**
+ * Formats optional context so it can be inserted naturally
+ * after the key-points section.
+ */
+function formatExtraContext(text) {
+  if (!text || !String(text).trim()) {
+    return "";
+  }
+
+  return `\n\n${String(text).trim()}\n\n`;
+}
+
+function renderStaticTemplate({
+  mailType,
+  senderName,
+  senderSignature,
+  companyName,
+  role,
+  keyPoints,
+  extraContext,
+}) {
   const tpl = STATIC_TEMPLATES[mailType];
+
   if (!tpl) {
     throw new Error(`No static template exists for mail type "${mailType}".`);
   }
@@ -111,16 +148,21 @@ function renderStaticTemplate({ mailType, senderName, senderSignature, companyNa
   const vars = {
     senderName: senderName || "",
     companyName: companyName || "your company",
-    role: role || "roles matching my background",
+    role: role || "a suitable role",
     keyPoints: formatKeyPoints(keyPoints),
-    extraContext: extraContext ? `${extraContext}\n\n` : "",
+    extraContext: formatExtraContext(extraContext),
     signature: senderSignature || senderName || "",
   };
 
   return {
-    subject: fillTemplate(tpl.subject, vars),
-    body: fillTemplate(tpl.body, vars),
+    subject: fillTemplate(tpl.subject, vars).trim(),
+    body: fillTemplate(tpl.body, vars)
+      .replace(/\n{3,}/g, "\n\n")
+      .trim(),
   };
 }
 
-module.exports = { renderStaticTemplate, STATIC_TEMPLATES };
+module.exports = {
+  renderStaticTemplate,
+  STATIC_TEMPLATES,
+};
